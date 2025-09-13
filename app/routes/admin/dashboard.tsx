@@ -5,7 +5,7 @@ import { getTripsByTravelStyle, getUserGrowthPerDay, getUsersAndTripsStats } fro
 import { getAllTrips } from "~/apppwrite/trips";
 import { parseTripData } from "~/lib/utils";
 import { Category, ChartComponent, ColumnSeries, DataLabel, Inject, SeriesCollectionDirective, SeriesDirective, SplineAreaSeries, Tooltip } from "@syncfusion/ej2-react-charts";
-import { userXAxis, useryAxis } from "~/constants";
+import { tripXAxis, tripyAxis, userXAxis, useryAxis } from "~/constants";
 
 export const clientLoader = async () => {
   const [ 
@@ -120,9 +120,40 @@ const Dashboard = ({ loaderData }: Route.ComponentProps) => {
                  columnWidth={0.3}
                  cornerRadius={{ topLeft: 10, topRight: 10}}
                />
+
+               <SeriesDirective 
+                 dataSource={userGrowth}
+                 xName="day"
+                 yName="count"
+                 type="SplineArea"
+                 name="Wave"
+                 fill="rgba(71, 132, 238, 0.3)"
+                 border={{ width: 2, color: '#4784EE'}}
+                 />
             </SeriesCollectionDirective>
          </ChartComponent>
 
+         <ChartComponent 
+            id="chart-2"
+            primaryXAxis={tripXAxis}
+            primaryYAxis={tripyAxis}
+            title="Trip trends"
+            tooltip={{ enable: true }}
+           >
+            <Inject services={[ColumnSeries, SplineAreaSeries, Category, DataLabel, Tooltip]} />
+
+            <SeriesCollectionDirective>
+              <SeriesDirective 
+                 dataSource={tripsByTravelStyle}
+                 xName="travelStyle"
+                 yName="count"
+                 type="Column"
+                 name="day"
+                 columnWidth={0.3}
+                 cornerRadius={{ topLeft: 10, topRight: 10}}
+               />
+            </SeriesCollectionDirective>
+         </ChartComponent>
      </section>
     </main>
   )

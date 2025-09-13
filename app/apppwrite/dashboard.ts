@@ -138,25 +138,31 @@ export const getTripsCreatedPerDay = async () => {
 
 export const getTripsByTravelStyle = async () => {
     const trips = await database.listDocuments(
-        appwriteConfig.databaseId,
-        appwriteConfig.tripColletionId
+      appwriteConfig.databaseId,
+      appwriteConfig.tripColletionId
     );
-
+  
     const travelStyleCounts = trips.documents.reduce(
-        (acc: { [key: string]: number }, trip: Document) => {
-            const tripDetail = parseTripData(trip.tripDetails);
+      (acc: { [key: string]: number }, trip: Document) => {
+        const tripDetail = trip.tripDetail
+          ? parseTripData(trip.tripDetail)
+          : null;
+  
+        if (tripDetail && tripDetail.travelStyle) {
+          const travelStyle = tripDetail.travelStyle;
+          acc[travelStyle] = (acc[travelStyle] || 0) + 1;
+        }
 
-            if (tripDetail && tripDetail.travelStyle) {
-                const travelStyle = tripDetail.travelStyle;
-                acc[travelStyle] = (acc[travelStyle] || 0) + 1;
-            }
-            return acc;
-        },
-        {}
+        if (!trip.tripDetail) {
+            console.warn("Trip missing details:", trip.$id);
+          }
+        return acc;
+      },
+      {}
     );
-
     return Object.entries(travelStyleCounts).map(([travelStyle, count]) => ({
-        count: Number(count),
-        travelStyle,
+      travelStyle,
+      count: Number(count),
     }));
-};
+  };
+  

@@ -4,11 +4,11 @@ import { redirect } from "react-router";
 
 export const loginWithGoogle = async () => {
     try {
-      account.createOAuth2Session(
-        OAuthProvider.Google,
-        "https://travelista-xi.vercel.app/dashboard", // success URL
-        "https://travelista-xi.vercel.app/sign-in"      // failure URL
-      );
+        account.createOAuth2Session(
+            OAuthProvider.Google,
+            "https://travelista-xi.vercel.app/dashboard", // success
+            "https://travelista-xi.vercel.app/sign-in"    // failure
+          );
     } catch (e) {
       console.log("loginWithGoogle", e);
     }

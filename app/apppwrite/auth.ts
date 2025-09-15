@@ -2,15 +2,17 @@ import { ID, OAuthProvider, Query } from "appwrite";
 import { account, appwriteConfig, database } from "./client";
 import { redirect } from "react-router";
 
-export const loginWithGoogle = async() => {
+export const loginWithGoogle = async () => {
     try {
-        account.createOAuth2Session(
-            OAuthProvider.Google
-        )
+      account.createOAuth2Session(
+        OAuthProvider.Google,
+        "https://travelista-xi.vercel.app/dashboard", // success URL
+        "https://travelista-xi.vercel.app/sign-in"      // failure URL
+      );
     } catch (e) {
-        console.log('loginWithGoogle',e);
+      console.log("loginWithGoogle", e);
     }
-}
+  };
 
 export const getUser = async() => {
     try {

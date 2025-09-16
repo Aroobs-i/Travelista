@@ -6,13 +6,14 @@ export const loginWithGoogle = async () => {
     try {
         account.createOAuth2Session(
             OAuthProvider.Google,
-            "https://travelista-xi.vercel.app/dashboard", // success
-            "https://travelista-xi.vercel.app/sign-in"    // failure
-          );
-    } catch (e) {
-      console.log("loginWithGoogle", e);
+            `${window.location.origin}/`,
+            `${window.location.origin}/404`
+        );
+    } catch (error) {
+        console.error("Error during OAuth2 session creation:", error);
     }
-  };
+};
+
 
 export const getUser = async() => {
     try {
@@ -28,11 +29,12 @@ export const getUser = async() => {
                 Query.select(['name','email','imageUrl','joinedAt','accountId']),
             ]
         );
-        return documents[0] ?? null;
+        return documents.length > 0 ? documents[0] : redirect("/sign-in");
     } catch (e) {
-        console.log(e);
+        console.log('Error fetching user:',e);
+        return null;
     }
-}
+};
 
 export const logoutUser = async() => {
     try {
@@ -40,7 +42,7 @@ export const logoutUser = async() => {
     } catch (error) {
         console.error("Error during logout:", error);
     }
-}
+};
 
 export const storeUserData = async() => {
     try {
@@ -69,7 +71,7 @@ export const storeUserData = async() => {
     } catch (error) {
         console.error("Error storing user data:", error);
     }
-}
+};
 
 export const getExistingUser = async(id:string) => {
     try {
@@ -80,10 +82,10 @@ export const getExistingUser = async(id:string) => {
         );
         return total > 0 ? documents[0] : null;
     } catch (error) {
-        console.error("Error fetching user:", error);
+        console.error("Error fetching the user:", error);
         return null;
     }
-}
+};
 
 export const getGooglePicture = async (accessToken: string) => {
     try {
@@ -116,4 +118,4 @@ try {
     console.log('Error fetching users', e)
     return { users: [], total: 0 }
 }
-}
+};

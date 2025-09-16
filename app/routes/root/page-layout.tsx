@@ -20,6 +20,9 @@ const PageLayout = () => {
                 className="size-6"
             />
              </button>
+             <button onClick={() => {navigate('/dashboard')}}>
+              Dashboard
+             </button>
     </div>
   )
 }

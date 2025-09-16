@@ -4,37 +4,37 @@ import { redirect } from "react-router";
 
 export const loginWithGoogle = async () => {
     try {
-        account.createOAuth2Session(
-            OAuthProvider.Google,
-            `${window.location.origin}/`,
-            `${window.location.origin}/404`
-        );
+      return account.createOAuth2Session(
+        OAuthProvider.Google,
+        `${window.location.origin}/`,      // success redirect
+        `${window.location.origin}/404`   // failure redirect
+      );
     } catch (error) {
-        console.error("Error during OAuth2 session creation:", error);
+      console.error("Error during OAuth2 session creation:", error);
+      throw error;
     }
-};
+  };
 
-
-export const getUser = async() => {
+export const getUser = async () => {
     try {
-        const user = await account.get();
-
-        if(!user) return redirect('/sign-in');
-
-        const {documents} = await database.listDocuments(
-            appwriteConfig.databaseId,
-            appwriteConfig.userCollectionId,
-            [
-                Query.equal('accountId', user.$id),
-                Query.select(['name','email','imageUrl','joinedAt','accountId']),
-            ]
-        );
-        return documents.length > 0 ? documents[0] : redirect("/sign-in");
+      const user = await account.get();
+  
+      const response = await database.listDocuments(
+        appwriteConfig.databaseId,
+        appwriteConfig.userCollectionId,
+        [Query.equal("accountId", user.$id)]
+      );
+  
+      if (response.documents.length === 0) {
+        return null; // no profile in DB
+      }
+  
+      return response.documents[0];
     } catch (e) {
-        console.log('Error fetching user:',e);
-        return null;
+      console.error("Error fetching user:", e);
+      return null;
     }
-};
+  };
 
 export const logoutUser = async() => {
     try {

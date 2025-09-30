@@ -65,8 +65,8 @@ export const loginWithGoogle = async () => {
     try {
         account.createOAuth2Session(
             OAuthProvider.Google,
-            `${window.location.origin}/`,
-            `${window.location.origin}/404`
+            'http://localhost:5173/dashboard',
+            'http://localhost:5173/sign-in',
         );
     } catch (error) {
         console.error("Error during OAuth2 session creation:", error);

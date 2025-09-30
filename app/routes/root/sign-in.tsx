@@ -4,13 +4,14 @@ import { loginWithGoogle } from "~/apppwrite/auth";
 import { account } from "~/apppwrite/client";
 
 export async function clientLoader() {
-    try {
-        const user = await account.get();
-
-        if(!user.$id) return redirect('/dashboard');
-    } catch (e) {
-        console.log('Error fetching user',e)
-    }
+  try {
+    const user = await account.get();
+    // if logged in, go to dashboard
+    if (user?.$id) return redirect('/dashboard');
+    return null; // allow staying on sign-in
+  } catch {
+    return null; // not logged in, stay on sign-in
+  }
 }
 
 const signIn = () => {
